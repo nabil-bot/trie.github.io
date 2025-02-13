@@ -98,13 +98,13 @@ filter_dict = {
     "য়":"য়",
     "ব়":"র"
 }
+
+
 BanglaRegEx = "^[‍‌কড়ঢ়য়ব়খগঘঙচছজ‍‌ঝঞটঠডঢণতথদধনপফবভমযরলশষসহড়ঢ়য়ৎংঃঁঅআইঈউঊঋএঐওঔািীুূৃেৈোৌ্‍‍]+$"
 def add_word(word: str):
-    # filter ==============
+    # filter ================================
     for k, v in filter_dict.items():
         word = word.replace(k, v)
-    
-    # check if the word matches the BanglaRegex pattern
     if re.match(BanglaRegEx, word):
         if len(word) > 3:
             dir_path = os.path.join(*(str(convertion_map[char]) for char in word))
@@ -114,9 +114,10 @@ def add_word(word: str):
             
             with open(file_path, 'a', encoding='utf-8') as f:
                 f.write(word + '\n')
-            
-            # Update words.txt in each prefix directory
-            for i in range(1, len(word) + 1):
+
+            print(f"file০ path: {file_path}")
+
+            for i in range(1, len(word)):
                 prefix_dir = os.path.join(*(str(convertion_map[char]) for char in word[:i]))
                 os.makedirs(prefix_dir, exist_ok=True)
                 
@@ -124,18 +125,39 @@ def add_word(word: str):
                 
                 with open(words_txt_path, 'a', encoding='utf-8') as f:
                     f.write(word + '\n')
+                print(f"file1 path: {words_txt_path}")
+
             print("Added successfuly")        
     else:
-        print(f"Invalid word: {word}")                
+        print(f"Invalid word: {word}")
+    # /==================================
 
-
-    # /====================
-
-
-add_word("শাহবাগে")
+# add_word("ফাফরবাজ")
 
 
 
 
+# deleting double words at the end path ==========
+# c = 0
+# for word in list(word_set):
+#     if len(word) > 3:
+#         try:
+#             dir_path = os.path.join(*(str(convertion_map[char]) for char in word))
+#             # os.makedirs(dir_path, exist_ok=True)
+#             file_path = os.path.join(dir_path, 'words.html')
+#             with open(file_path, 'r', encoding='utf-8') as f:
+#                 words = f.read()
 
+#             words = [word for word in words.split('\n') if word]
+#             # print(f"words: {words}")    
+#             # print(f"words set: {set(words)}")
 
+#             with open(file_path, 'w', encoding='utf-8') as f:
+#                 f.write('\n'.join(set(words)))
+#             # print("what gonna write: {}".format('\n'.join(set(words))))
+#         except Exception as e:
+#             print(f"error: {e}")
+#             pass  
+
+#         c += 1
+#         print(c)
