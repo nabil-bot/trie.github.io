@@ -92,6 +92,8 @@ for i in range(len(char_set)):
 
 
 import re
+import requests
+import time
 filter_dict = {
     "ড়":"ড়",
     "ঢ়":"ঢ়",
@@ -161,3 +163,32 @@ def add_word(word: str):
 
 #         c += 1
 #         print(c)
+
+
+temp = "https://raw.githubusercontent.com/nabil-bot/trie.github.io/refs/heads/main/11/59/words.html"
+
+"""
+https://raw.githubusercontent.com/nabil-bot/trie.github.io/refs/heads/main/62/0/3/words.html
+"""
+
+
+def get_suggestions(prefix):
+    dir_path = (os.path.join(*(str(convertion_map[char]) for char in prefix))).replace('\\', '/')
+    print(f"dir path: {dir_path}")
+    url = "https://raw.githubusercontent.com/nabil-bot/trie.github.io/refs/heads/main/"+dir_path+"/words.html"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            words = response.text.split('\n')
+            print(f"Suggestions: {words}")
+        else:
+            print(f"Failed to fetch suggestions, status code: {response.status_code}")
+    except Exception as e:
+        print(f"Error fetching suggestions: {e}")
+
+
+start_time = time.time()
+get_suggestions("বাং")
+end_time = time.time()
+
+print(f"Time taken: {end_time - start_time} seconds")
