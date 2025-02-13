@@ -3,10 +3,10 @@ import pickle
 import os
 from collections import defaultdict
 
-with open("banglaWords.pkl", "rb") as f:
-    word_set = pickle.load(f)
+# with open("banglaWords.pkl", "rb") as f:
+#     word_set = pickle.load(f)
 
-print(f"length: {len(word_set)}")
+# print(f"length: {len(word_set)}")
 
 char_set = ['া', 'ফ', '\u200c', 'ং', 'ঞ', '্', 'ৎ', 'দ', 'ঐ', 'ঔ', 'ৌ', 'ঋ', 'জ', 'ৗ', 'এ', 'ঢ', 'ড়', 'ে', 'স', 'চ', 'প', 'ক', 'ি', 'ঠ', 'ষ', 'ূ', 'ছ', 'ো', 'য', 'ল', 'ই', 'ঝ', 'ঘ', 'থ', 'হ', 'ও', 'ঙ', 'ঈ', 'আ', 'ৰ', 'য়', 'ত', 'ড', 'ঃ', '\u200d', 'ভ', 'গ', 'উ', 'শ', 'ু', 'খ', 'ৈ', 'ঢ়', 'ধ', 'ট', 'ম', 'ঁ', 'র', 'ৃ', 'ণ', 'অ', 'ঊ', 'ব', 'ী', 'ন']
 
@@ -15,27 +15,25 @@ convertion_map = {}
 for i in range(len(char_set)):
     convertion_map[char_set[i]] = i
 
-for word in word_set:
-    if len(word) > 3:
-        dir_path = os.path.join(*(str(convertion_map[char]) for char in word))
-        os.makedirs(dir_path, exist_ok=True)
+# for word in word_set:
+#     if len(word) > 3:
+#         dir_path = os.path.join(*(str(convertion_map[char]) for char in word))
+#         os.makedirs(dir_path, exist_ok=True)
         
-        file_path = os.path.join(dir_path, 'words.html')
+#         file_path = os.path.join(dir_path, 'words.html')
         
-        with open(file_path, 'a', encoding='utf-8') as f:
-            f.write(word + '\n')
+#         with open(file_path, 'a', encoding='utf-8') as f:
+#             f.write(word + '\n')
         
-        # Update words.txt in each prefix directory
-        for i in range(1, len(word) + 1):
-            prefix_dir = os.path.join(*(str(convertion_map[char]) for char in word[:i]))
-            os.makedirs(prefix_dir, exist_ok=True)
+#         # Update words.txt in each prefix directory
+#         for i in range(1, len(word) + 1):
+#             prefix_dir = os.path.join(*(str(convertion_map[char]) for char in word[:i]))
+#             os.makedirs(prefix_dir, exist_ok=True)
             
-            words_txt_path = os.path.join(prefix_dir, 'words.html')
+#             words_txt_path = os.path.join(prefix_dir, 'words.html')
             
-            with open(words_txt_path, 'a', encoding='utf-8') as f:
-                f.write(word + '\n')
-
-
+#             with open(words_txt_path, 'a', encoding='utf-8') as f:
+#                 f.write(word + '\n')
 
 
 # unique_chars = set()
@@ -93,10 +91,48 @@ for word in word_set:
 #     for char in word:
 
 
+import re
+filter_dict = {
+    "ড়":"ড়",
+    "ঢ়":"ঢ়",
+    "য়":"য়",
+    "ব়":"র"
+}
+BanglaRegEx = "^[‍‌কড়ঢ়য়ব়খগঘঙচছজ‍‌ঝঞটঠডঢণতথদধনপফবভমযরলশষসহড়ঢ়য়ৎংঃঁঅআইঈউঊঋএঐওঔািীুূৃেৈোৌ্‍‍]+$"
+def add_word(word: str):
+    # filter ==============
+    for k, v in filter_dict.items():
+        word = word.replace(k, v)
+    
+    # check if the word matches the BanglaRegex pattern
+    if re.match(BanglaRegEx, word):
+        if len(word) > 3:
+            dir_path = os.path.join(*(str(convertion_map[char]) for char in word))
+            os.makedirs(dir_path, exist_ok=True)
+            
+            file_path = os.path.join(dir_path, 'words.html')
+            
+            with open(file_path, 'a', encoding='utf-8') as f:
+                f.write(word + '\n')
+            
+            # Update words.txt in each prefix directory
+            for i in range(1, len(word) + 1):
+                prefix_dir = os.path.join(*(str(convertion_map[char]) for char in word[:i]))
+                os.makedirs(prefix_dir, exist_ok=True)
+                
+                words_txt_path = os.path.join(prefix_dir, 'words.html')
+                
+                with open(words_txt_path, 'a', encoding='utf-8') as f:
+                    f.write(word + '\n')
+            print("Added successfuly")        
+    else:
+        print(f"Invalid word: {word}")                
 
 
+    # /====================
 
 
+add_word("শাহবাগে")
 
 
 
