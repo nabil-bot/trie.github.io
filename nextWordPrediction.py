@@ -123,7 +123,7 @@ def add_word(word: str):
             already_exist = False
             if word not in words:
                 words.append(word)
-                words.sort()
+                words.sort(key=len)
 
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.write('\n'.join(words))
@@ -146,7 +146,7 @@ def add_word(word: str):
 
                     if word not in words:
                         words.append(word)
-                        words.sort()
+                        words.sort(key=len)
 
                         with open(words_txt_path, 'w', encoding='utf-8') as f:
                             f.write('\n'.join(words))
