@@ -92,7 +92,7 @@ for i in range(len(char_set)):
 
 
 import re
-import requests
+# import requests
 import time
 filter_dict = {
     "ড়":"ড়",
@@ -101,7 +101,7 @@ filter_dict = {
     "ব়":"র"
 }
 
-
+count = 0
 BanglaRegEx = "^[‍‌কড়ঢ়য়ব়খগঘঙচছজ‍‌ঝঞটঠডঢণতথদধনপফবভমযরলশষসহড়ঢ়য়ৎংঃঁঅআইঈউঊঋএঐওঔািীুূৃেৈোৌ্‍‍]+$"
 def add_word(word: str):
     # filter ================================
@@ -114,20 +114,43 @@ def add_word(word: str):
             
             file_path = os.path.join(dir_path, 'words.html')
             
-            with open(file_path, 'a', encoding='utf-8') as f:
-                f.write(word + '\n')
+            if os.path.exists(file_path):
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    words = f.read().splitlines()
+            else:
+                words = []
+
+            already_exist = False
+            if word not in words:
+                words.append(word)
+                words.sort()
+
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write('\n'.join(words))
+            else:
+                already_exist = True        
 
             print(f"file০ path: {file_path}")
+            if not already_exist:
+                for i in range(1, len(word)):
+                    prefix_dir = os.path.join(*(str(convertion_map[char]) for char in word[:i]))
+                    os.makedirs(prefix_dir, exist_ok=True)
+                    
+                    words_txt_path = os.path.join(prefix_dir, 'words.html')
+                    
+                    if os.path.exists(words_txt_path):
+                        with open(words_txt_path, 'r', encoding='utf-8') as f:
+                            words = f.read().splitlines()
+                    else:
+                        words = []
 
-            for i in range(1, len(word)):
-                prefix_dir = os.path.join(*(str(convertion_map[char]) for char in word[:i]))
-                os.makedirs(prefix_dir, exist_ok=True)
-                
-                words_txt_path = os.path.join(prefix_dir, 'words.html')
-                
-                with open(words_txt_path, 'a', encoding='utf-8') as f:
-                    f.write(word + '\n')
-                print(f"file1 path: {words_txt_path}")
+                    if word not in words:
+                        words.append(word)
+                        words.sort()
+
+                        with open(words_txt_path, 'w', encoding='utf-8') as f:
+                            f.write('\n'.join(words))
+                    print(f"file1 path: {words_txt_path}")
 
             print("Added successfuly")        
     else:
@@ -172,23 +195,25 @@ https://raw.githubusercontent.com/nabil-bot/trie.github.io/refs/heads/main/62/0/
 """
 
 
-def get_suggestions(prefix):
-    dir_path = (os.path.join(*(str(convertion_map[char]) for char in prefix))).replace('\\', '/')
-    print(f"dir path: {dir_path}")
-    url = "https://raw.githubusercontent.com/nabil-bot/trie.github.io/refs/heads/main/"+dir_path+"/words.html"
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            words = response.text.split('\n')
-            print(f"Suggestions: {words}")
-        else:
-            print(f"Failed to fetch suggestions, status code: {response.status_code}")
-    except Exception as e:
-        print(f"Error fetching suggestions: {e}")
+# def get_suggestions(prefix):
+#     dir_path = (os.path.join(*(str(convertion_map[char]) for char in prefix))).replace('\\', '/')
+#     print(f"dir path: {dir_path}")
+#     url = "https://raw.githubusercontent.com/nabil-bot/trie.github.io/refs/heads/main/"+dir_path+"/words.html"
+#     try:
+#         response = requests.get(url)
+#         if response.status_code == 200:
+#             words = response.text.split('\n')
+#             print(f"Suggestions: {words}")
+#         else:
+#             print(f"Failed to fetch suggestions, status code: {response.status_code}")
+#     except Exception as e:
+#         print(f"Error fetching suggestions: {e}")
 
 
-start_time = time.time()
-get_suggestions("বাং")
-end_time = time.time()
+# start_time = time.time()
+# get_suggestions("বাং")
+# end_time = time.time()
 
-print(f"Time taken: {end_time - start_time} seconds")
+# print(f"Time taken: {end_time - start_time} seconds")
+
+
