@@ -13,7 +13,7 @@ with open("words_set.pkl", "rb") as f:
 print(f"\nBefore:\nNum of words from words_set.pkl file: {len(word_set)}\nNum of words in banglaWords.pkl: {len(banglaWords)}")
 
 for word in word_set:
-    # add_word(word)
+    add_word(word)
     banglaWords.add(word)
 
 
