@@ -1,6 +1,6 @@
 from nextWordPrediction import add_word
 
-import pickle
+import pickle, traceback
 
 
 with open("banglaWords.pkl", 'rb') as f:
@@ -13,9 +13,12 @@ with open("words_set.pkl", "rb") as f:
 print(f"\nBefore:\nNum of words from words_set.pkl file: {len(word_set)}\nNum of words in banglaWords.pkl: {len(banglaWords)}")
 
 for word in word_set:
-    add_word(word)
-    banglaWords.add(word)
-
+    try:
+        add_word(word)
+        banglaWords.add(word)
+    except Exception as e:
+        print(traceback.format_exc())
+        continue    
 
 with open("banglaWords.pkl", 'wb') as f:
     pickle.dump(banglaWords, f)
